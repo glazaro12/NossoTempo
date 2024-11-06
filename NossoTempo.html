@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nosso Tempo</title>
+    <!-- Link para a fonte Poppins do Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        /* Reset básico */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif; /* Definindo a fonte Poppins como padrão */
+            background-color: #f9f1e7;
+            color: #3c2f2f;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: #8a4e38;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        /* Contêiner do site */
+        .container {
+            background-color: #f7e8d0;
+            width: 80%;
+            max-width: 700px;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            text-align: center;
+            font-family: 'Poppins', sans-serif; /* Garantindo que o conteúdo use Poppins */
+        }
+
+        /* Estilo das abas */
+        .tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .tab {
+            background-color: #8a4e38;
+            color: white;
+            padding: 12px 30px;
+            margin: 0 10px;
+            border-radius: 5px 5px 0 0;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .tab:hover {
+            background-color: #6a3524;
+        }
+
+        .tab.active {
+            background-color: #6a3524;
+        }
+
+        /* Conteúdo das abas */
+        .tab-content {
+            display: none;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 0 0 5px 5px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            font-size: 1.2rem;
+            color: #5b2e1b;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Estilo da exibição do tempo */
+        .time {
+            font-family: 'Poppins', sans-serif; /* Usando Poppins aqui também */
+            font-size: 2rem;
+            color: #8a4e38;
+            font-weight: 400; /* Peso leve para um visual mais delicado */
+            letter-spacing: 1px;
+            margin-top: 20px;
+            text-transform: uppercase;
+        }
+
+        .button {
+            background-color: #8a4e38;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+            margin-top: 30px;
+        }
+
+        .button:hover {
+            background-color: #6a3524;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Nosso Tempo Juntos</h1>
+
+        <div class="tabs">
+            <div class="tab" id="tab-1">Primeira Mensagem</div>
+            <div class="tab" id="tab-2">Primeiro Encontro</div>
+        </div>
+
+        <!-- Conteúdo das Abas -->
+        <div id="content-1" class="tab-content">
+            <p>Tempo desde a nossa Primeira Mensagem:</p>
+            <p id="time-1" class="time"></p>
+        </div>
+        <div id="content-2" class="tab-content">
+            <p>Tempo desde o nosso Primeiro Encontro:</p>
+            <p id="time-2" class="time"></p>
+        </div>
+
+        <button class="button" onclick="reloadPage()">Atualizar</button>
+    </div>
+
+    <script>
+        // Função para calcular o tempo decorrido
+        function calculateTime(date) {
+            const now = new Date();
+            const diff = now - date;
+
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+            return `${days} dias, ${hours} horas, ${minutes} minutos e ${seconds} segundos`;
+        }
+
+        // Função para atualizar os tempos das abas
+        function updateTimes() {
+            const primeiraMensagemDate = new Date('2024-07-23T17:18:00');
+            const primeiroEncontroDate = new Date('2024-07-27T13:46:00');
+
+            // Atualiza o conteúdo das abas com o tempo calculado
+            document.getElementById('time-1').textContent = calculateTime(primeiraMensagemDate);
+            document.getElementById('time-2').textContent = calculateTime(primeiroEncontroDate);
+        }
+
+        // Função para mostrar a aba ativa
+        function setActiveTab(tabId) {
+            const tabs = document.querySelectorAll('.tab');
+            const contents = document.querySelectorAll('.tab-content');
+
+            tabs.forEach(tab => tab.classList.remove('active'));
+            contents.forEach(content => content.classList.remove('active'));
+
+            document.getElementById(`tab-${tabId}`).classList.add('active');
+            document.getElementById(`content-${tabId}`).classList.add('active');
+        }
+
+        // Inicialização
+        document.getElementById('tab-1').addEventListener('click', () => setActiveTab(1));
+        document.getElementById('tab-2').addEventListener('click', () => setActiveTab(2));
+
+        // Definir aba inicial
+        setActiveTab(1);
+
+        // Atualizar o tempo em tempo real (a cada segundo)
+        setInterval(updateTimes, 1000);
+
+        // Função para atualizar a página
+        function reloadPage() {
+            updateTimes();
+        }
+    </script>
+
+</body>
+</html>
